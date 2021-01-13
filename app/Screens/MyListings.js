@@ -2,14 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet, FlatList, Text } from "react-native";
 import ListingsApi from "./../api/userListings";
 import * as Font from "expo-font";
-import AppText from "../Components/AppText";
 import colors from "../../config/colors";
 import context from "../../context/context";
 import Listing from "../Components/Listing";
 import Screen from "./../Components/Screen";
-import user from "../api/user";
 
-function MyListings() {
+function MyListings({ navigation }) {
   const itemContext = useContext(context.ItemContext);
   const [userIngredients, setUserIngredients] = useState([]);
   const [userFoods, setUserFoods] = useState([]);
@@ -18,9 +16,6 @@ function MyListings() {
     VINCHAND: require("../../assets/fonts/VINCHAND.ttf"),
     IndieFlower: require("../../assets/fonts/IndieFlower-Regular.ttf"),
   });
-  if (!loaded) {
-    console.log(error);
-  }
 
   useEffect(() => {
     loadUserListings();
@@ -31,6 +26,10 @@ function MyListings() {
     const { ingredients, foods } = response.data;
     setUserIngredients(ingredients);
     setUserFoods(foods);
+  };
+
+  const handleEdit = (item, isIngredient) => {
+    navigation.navigate("EditItem", { item, isIngredient });
   };
 
   return (
@@ -44,7 +43,13 @@ function MyListings() {
             data={userIngredients}
             keyExtractor={(listing) => listing._id}
             renderItem={({ item }) => (
-              <Listing name={item.name} isIngredient={true} itemId={item._id} />
+              <Listing
+                item={item}
+                isIngredient={true}
+                onEdit={() => {
+                  handleEdit(item, true);
+                }}
+              />
             )}
           />
         )}
@@ -59,9 +64,11 @@ function MyListings() {
             keyExtractor={(listing) => listing._id}
             renderItem={({ item }) => (
               <Listing
-                name={item.name}
+                item={item}
                 isIngredient={false}
-                itemId={item._id}
+                onEdit={() => {
+                  handleEdit(item, false);
+                }}
               />
             )}
           />
@@ -81,7 +88,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginVertical: 20,
-    fontSize: 20,
+    fontSize: 15,
     color: colors.white,
   },
 });

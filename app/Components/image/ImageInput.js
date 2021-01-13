@@ -29,7 +29,6 @@ function ImageInput({ imageUri, onChangeImage }) {
     try {
       const result = await ImagePicker.launchImageLibraryAsync();
       if (!result.cancelled) {
-        console.log(result);
         onChangeImage(result.uri);
       }
     } catch (error) {

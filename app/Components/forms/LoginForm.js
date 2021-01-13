@@ -7,7 +7,6 @@ import BaseForm from "./BaseForm";
 import SubmitButton from "./SubmitButton";
 import authApi from "../../api/auth";
 import ErrorMessage from "./ErrorMessage";
-import Context from "../../../context/context";
 import useAuth from "../../auth/useAuth";
 
 const validationSchema = Yup.object().shape({

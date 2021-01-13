@@ -6,6 +6,29 @@ import AppText from "./../Components/AppText";
 import Screen from "./../Components/Screen";
 import * as Font from "expo-font";
 
+export const getDate = (date) => {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  date = new Date(date);
+  const day = date.getDate();
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+
+  return day + " " + month + ", " + year;
+};
+
 function FoodDetail({ route }) {
   const [loaded, error] = Font.useFonts({
     Architect: require("../../assets/fonts/ArchitectsDaughter-Regular.ttf"),
@@ -15,29 +38,6 @@ function FoodDetail({ route }) {
     console.log(error);
   }
   const item = route.params;
-
-  const getDate = (date) => {
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    date = new Date(date);
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-
-    return day + " " + month + ", " + year;
-  };
 
   return (
     <Screen style={styles.container}>
@@ -73,9 +73,15 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.black,
   },
-  image: { margin: 10, width: "100%", overflow: "hidden", borderRadius: 20 },
+  image: {
+    margin: 10,
+    width: "100%",
+    overflow: "hidden",
+    borderRadius: 20,
+    resizeMode: "contain",
+  },
   text: {
-    fontSize: 24,
+    fontSize: 18,
     fontFamily: "Chilanka",
     margin: 5,
     color: colors.white,

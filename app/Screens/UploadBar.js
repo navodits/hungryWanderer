@@ -20,7 +20,6 @@ function UploadBar({ onDone, progress = 0, visible = false }) {
             style={styles.animation}
             source={require("../../assets/animations/done.json")}
             onAnimationFinish={() => {
-              setTimeout(500);
               onDone();
             }}
             loop={false}

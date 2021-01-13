@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "description": "An app to reduce food wastage by letting people give/take food or ingredients according to their needs.\n\r NOTE: The app may take some time to load on first hit because the server-side application is unloaded if not used for a while.",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",

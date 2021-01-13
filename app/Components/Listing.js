@@ -7,25 +7,17 @@ import ingredientsApi from "../api/ingredients";
 import foodsApi from "../api/foods";
 import context from "../../context/context";
 
-function Listing({ name, isIngredient, itemId }) {
+function Listing({ item, isIngredient, onEdit }) {
   const itemContext = useContext(context.ItemContext);
   const [loaded, error] = Font.useFonts({
     Architect: require("../../assets/fonts/ArchitectsDaughter-Regular.ttf"),
     IndieFlower: require("../../assets/fonts/IndieFlower-Regular.ttf"),
   });
-  if (!loaded) {
-    console.log(error);
-  }
-
-  const handleEdit = () => {
-    alert("This functionality is under developement");
-  };
 
   const handleDelete = async () => {
     const response = await (isIngredient
-      ? ingredientsApi.deleteIngredient(itemId)
-      : foodsApi.deleteFood(itemId));
-
+      ? ingredientsApi.deleteIngredient(item._id)
+      : foodsApi.deleteFood(item._id));
     if (!response.ok || response == undefined) {
       return alert("Could not delete the item");
     }
@@ -34,11 +26,11 @@ function Listing({ name, isIngredient, itemId }) {
   };
   return (
     <View style={styles.container}>
-      {loaded && <Text style={styles.text}>{name}</Text>}
+      {loaded && <Text style={styles.text}>{item.name}</Text>}
       <IconButton
         icon="pencil"
         iconColor={colors.black}
-        onPress={handleEdit}
+        onPress={onEdit}
         bgColor={colors.dodgerBlue}
       ></IconButton>
       <IconButton

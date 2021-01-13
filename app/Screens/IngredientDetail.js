@@ -4,17 +4,16 @@ import Screen from "./../Components/Screen";
 import AppText from "./../Components/AppText";
 import { SliderBox } from "react-native-image-slider-box";
 import colors from "../../config/colors";
+import { getDate } from "./FoodDetail";
+import * as Font from "expo-font";
 
 function IngredientDetail({ route }) {
-  const item = route.params;
-  const getDate = (date) => {
-    date = new Date(date);
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "long" });
-    const year = date.getFullYear();
+  const [loaded, error] = Font.useFonts({
+    Architect: require("../../assets/fonts/ArchitectsDaughter-Regular.ttf"),
+    Chilanka: require("../../assets/fonts/Chilanka-Regular.ttf"),
+  });
 
-    return day + " " + month + ", " + year;
-  };
+  const item = route.params;
 
   return (
     <Screen style={styles.container}>
@@ -28,17 +27,22 @@ function IngredientDetail({ route }) {
           />
         </View>
       )}
-      <View>
-        <AppText style={styles.text}>Item Name: {item.name}</AppText>
-        <AppText style={styles.text}>Quantity: {item.quantity}</AppText>
-        <AppText style={styles.text}>
-          Expiry Date: {getDate(item.expiry)}
-        </AppText>
-        <AppText style={styles.text}>
-          Address: {item.address + " ," + item.city}
-        </AppText>
-        <AppText style={styles.text}>Contact Number: {item.city}</AppText>
-      </View>
+      {loaded && (
+        <View>
+          <AppText style={styles.text}>Item Name: {item.name}</AppText>
+          <AppText style={styles.text}>Quantity: {item.quantity}</AppText>
+          <AppText style={styles.text}>
+            Expiry Date: {getDate(item.expiry)}
+          </AppText>
+          <AppText style={styles.text}>
+            Address: {item.address + ", " + item.city}
+          </AppText>
+          <AppText style={styles.text}>Category: {item.category}</AppText>
+          <AppText style={styles.text}>
+            Contact Number: {item.phoneNumber}
+          </AppText>
+        </View>
+      )}
     </Screen>
   );
 }
@@ -53,6 +57,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   text: {
+    fontSize: 18,
+    fontFamily: "Chilanka",
+    margin: 5,
     color: colors.white,
   },
 });

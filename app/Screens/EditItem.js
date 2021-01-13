@@ -17,43 +17,55 @@ import AppPickerForm from "../Components/forms/AppPickerForm";
 import validationSchema from "./../utils/validationSchema";
 import categories from "../utils/ingredientCategories";
 
-function AddItem() {
+function EditItem({ route, navigation }) {
+  const { item, isIngredient } = route.params;
+  const date = new Date(item.expiry);
   const userContext = useContext(Context.UserContext);
   const itemContext = useContext(Context.ItemContext);
   const [resError, setResError] = useState();
-  const [isIngredient, setIsIngredient] = useState(false);
   const [uploadBarVisible, setUploadBarVisible] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [fontsLoaded, error] = Font.useFonts({
+  const [loaded, error] = Font.useFonts({
     VINCHAND: require("../../assets/fonts/VINCHAND.ttf"),
     IndieFlower: require("../../assets/fonts/IndieFlower-Regular.ttf"),
   });
 
-  const handleSubmit = async (listing, { resetForm }) => {
-    const userId = userContext.user._id;
+  item.imageUris = [];
+  const expiryDate =
+    date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
 
+  const handleSubmit = async (listing) => {
+    const userId = userContext.user._id;
     itemContext.setItemChanged(false);
     setProgress(0);
     setUploadBarVisible(true);
     const response = await (isIngredient
-      ? ingredientsApi.addIngredients({ ...listing, userId }, (progress) => {
-          setProgress(progress);
-        })
-      : foodsApi.addFoods({ ...listing, userId }, (progress) => {
-          setProgress(progress);
-        }));
-
+      ? ingredientsApi.editIngredient(
+          { ...listing, userId },
+          (progress) => {
+            setProgress(progress);
+          },
+          item._id
+        )
+      : foodsApi.editFood(
+          { ...listing, userId },
+          (progress) => {
+            setProgress(progress);
+          },
+          item._id
+        ));
     if (!response.ok || response == undefined) {
       setUploadBarVisible(false);
       if (response.data) {
         setResError(response.data);
       }
+
       return alert("Could not save the item");
     }
-    resetForm();
-    setUploaded(true);
 
+    setUploaded(true);
+    navigation.navigate("MyListings");
     itemContext.setItemChanged(true);
   };
 
@@ -61,7 +73,9 @@ function AddItem() {
     <Screen style={styles.container} style={styles.container}>
       <Image style={styles.logo} source={require("../../assets/logo.png")} />
       <UploadBar
-        onDone={() => setUploadBarVisible(false)}
+        onDone={() => {
+          setUploadBarVisible(false);
+        }}
         progress={progress}
         visible={uploadBarVisible}
         uploaded={uploaded}
@@ -73,39 +87,25 @@ function AddItem() {
       >
         <BaseForm
           initialValues={{
-            name: "",
-            quantity: "",
-            expiry: "",
-            address: "",
-            category: "",
-            city: "",
-            phoneNumber: "",
-            images: [],
+            name: item.name,
+            quantity: item.quantity,
+            expiry: expiryDate,
+            address: item.address,
+            category: item.category,
+            city: item.city,
+            phoneNumber: item.phoneNumber,
+            images: item.imageUris,
           }}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           <ImagePickerForm name="images" />
           <View style={styles.header}>
-            {fontsLoaded && (
+            {loaded && (
               <Text style={styles.title}>
-                {isIngredient ? "Add Ingredient" : "Add Food "}
+                {isIngredient ? "Edit Ingredient" : "Edit Food "}
               </Text>
             )}
-            {fontsLoaded && (
-              <Text style={styles.switchLabel}>
-                {isIngredient ? "Food" : "Ingredient"}
-              </Text>
-            )}
-
-            <Switch
-              style={styles.switch}
-              trackColor={{ true: colors.primary, false: colors.secondary }}
-              value={isIngredient}
-              onValueChange={(newValue) => {
-                setIsIngredient(newValue);
-              }}
-            />
           </View>
           <ErrorMessage error={resError} visible={resError !== null} />
           <FormField name="name" placeholder="Name" />
@@ -162,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddItem;
+export default EditItem;

@@ -1,8 +1,10 @@
 import { create } from "apisauce";
 import authStorage from "../auth/storage";
+import settings from "./../../config/settings";
 
 const client = create({
-  baseURL: "http://192.168.1.97:9000/api",
+  // baseURL: "https://hungrywanderer-backend.herokuapp.com/api",
+  baseURL: "http://192.168.1.96:9000/api",
 });
 
 client.addAsyncRequestTransform(async (request) => {
