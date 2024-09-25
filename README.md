@@ -18,3 +18,5 @@ This app is not on playstore yet, to see the current version:
   4. Create new account or Login using these credetials 
      * Username: admin@gmail.com
      * Password: 12345
+    
+To watch the walkthrough of the app,  please go to this URL - https://www.youtube.com/watch?v=poPEwzJ7tyE 
